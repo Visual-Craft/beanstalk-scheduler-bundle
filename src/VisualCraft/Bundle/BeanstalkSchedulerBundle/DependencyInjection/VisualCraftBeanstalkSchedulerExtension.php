@@ -65,7 +65,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
             $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
             $managerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Manager')
-                ->setArguments([$queueId, $container->getDefinition($connectionServiceId)])
+                ->setArguments([$container->getDefinition($connectionServiceId), $queueId])
             ;
 
             $container->setDefinition(
@@ -76,7 +76,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
             $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
             $schedulerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
-                ->setArguments([$queueId, $container->getDefinition($connectionServiceId), $queueConfig['reschedule']])
+                ->setArguments([$container->getDefinition($connectionServiceId), $queueId, $queueConfig['reschedule']])
             ;
 
             $container->setDefinition(
