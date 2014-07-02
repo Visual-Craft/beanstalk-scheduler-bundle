@@ -1,0 +1,14 @@
+services:
+    visual_craft_beanstalk_scheduler.abstract_scheduler:
+        abstract: true
+        calls:
+          - [setLogger, ["@logger"]]
+        tags:
+            - { name: monolog.logger, channel: visual_craft_beanstalk_scheduler }
+
+    visual_craft_beanstalk_scheduler.abstract_manager:
+        abstract: true
+        calls:
+          - [setLogger, ["@logger"]]
+        tags:
+            - { name: monolog.logger, channel: visual_craft_beanstalk_scheduler }
