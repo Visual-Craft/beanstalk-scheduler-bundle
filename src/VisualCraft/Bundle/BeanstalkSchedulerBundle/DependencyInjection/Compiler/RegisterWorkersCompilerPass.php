@@ -20,7 +20,7 @@ class RegisterWorkersCompilerPass implements CompilerPassInterface
             $schedulerDefinition = $container->findDefinition("visual_craft_beanstalk_scheduler.scheduler.{$queueId}");
 
             if (!$container->hasDefinition($workerId)) {
-                throw new \Exception("Worker with id '{$workerId}' not found for queue '{$queueId}' description");
+                throw new \Exception("Worker with id '{$workerId}' not found for queue '{$queueId}'");
             }
 
             if (!is_subclass_of($container->getDefinition($workerId)->getClass(), WorkerInterface::class)) {
