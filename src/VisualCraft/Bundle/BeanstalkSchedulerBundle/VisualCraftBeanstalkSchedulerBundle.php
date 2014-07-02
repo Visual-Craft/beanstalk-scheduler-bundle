@@ -4,7 +4,7 @@ namespace VisualCraft\Bundle\BeanstalkSchedulerBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
-use VisualCraft\Bundle\VisualCraftBeanstalkBundle\DependencyInjection\Compiler\RegisterWorkersCompilerPass;
+use VisualCraft\Bundle\BeanstalkSchedulerBundle\DependencyInjection\Compiler\RegisterWorkersCompilerPass;
 
 class VisualCraftBeanstalkSchedulerBundle extends Bundle
 {
