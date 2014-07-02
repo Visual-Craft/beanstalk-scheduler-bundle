@@ -6,6 +6,7 @@ use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use VisualCraft\BeanstalkScheduler\Scheduler;
 
 class WorkerCommand extends ContainerAwareCommand
 {
@@ -34,7 +35,9 @@ class WorkerCommand extends ContainerAwareCommand
             return 1;
         }
 
-        $this->getContainer()->get($serviceId)->schedule();
+        /** @var Scheduler $scheduler */
+        $scheduler = $this->getContainer()->get($serviceId);
+        $scheduler->process();
 
         return 0;
     }
