@@ -36,7 +36,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
         foreach ($connectionsConfig as $connectionId => $connectionConfig) {
             $connectionDefinition = new Definition(
                 'Pheanstalk\Pheanstalk',
-                array($connectionConfig['host'], $connectionConfig['port'], $connectionConfig['connectTimeout'])
+                [$connectionConfig['host'], $connectionConfig['port'], $connectionConfig['connectTimeout']]
             );
             $connectionDefinition->setPublic(false);
             $container->setDefinition(
@@ -53,7 +53,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
      */
     private function registerQueues(ContainerBuilder $container, $queuesConfig)
     {
-        $workersMap = array();
+        $workersMap = [];
 
         foreach ($queuesConfig as $queueId => $queueConfig) {
             $connectionServiceId = "visual_craft_beanstalk_scheduler.connection.{$queueConfig['connection']}";
@@ -65,7 +65,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
             $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
             $managerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Manager')
-                ->setArguments(array($queueId, $container->getDefinition($connectionServiceId)))
+                ->setArguments([$queueId, $container->getDefinition($connectionServiceId)])
             ;
 
             $container->setDefinition(
@@ -76,7 +76,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
             $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
             $schedulerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
-                ->setArguments(array($queueId, $container->getDefinition($connectionServiceId), $queueConfig['reschedule']))
+                ->setArguments([$queueId, $container->getDefinition($connectionServiceId), $queueConfig['reschedule']])
             ;
 
             $container->setDefinition(

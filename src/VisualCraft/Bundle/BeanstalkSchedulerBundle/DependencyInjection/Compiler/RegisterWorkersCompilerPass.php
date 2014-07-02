@@ -30,7 +30,7 @@ class RegisterWorkersCompilerPass implements CompilerPassInterface
             $schedulerDefinition
                 ->addMethodCall(
                     'registerWorker',
-                    array(new Reference($workerId))
+                    [new Reference($workerId)]
                 )
             ;
         }
