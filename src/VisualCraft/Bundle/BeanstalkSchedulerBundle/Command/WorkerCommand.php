@@ -25,6 +25,17 @@ class WorkerCommand extends ContainerAwareCommand
      */
     protected function execute(InputInterface $input, OutputInterface $output)
     {
-        $this->getContainer()->get("visual_craft_beanstalk_scheduler.scheduler.{$input->getArgument('queue')}")->schedule();
+        $queue = $input->getArgument('queue');
+        $serviceId = "visual_craft_beanstalk_scheduler.scheduler.{$queue}";
+
+        if (empty($queue) || !$this->getContainer()->has($serviceId)) {
+            $output->writeln("<error>Queue '{$queue}' is not configured</error>");
+
+            return 1;
+        }
+
+        $this->getContainer()->get($serviceId)->schedule();
+
+        return 0;
     }
 }
