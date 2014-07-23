@@ -17,7 +17,7 @@ class WorkerCommand extends ContainerAwareCommand
     {
         $this
             ->setName('vc:beanstalk:worker')
-            ->addArgument('queue', null, InputArgument::REQUIRED)
+            ->addArgument('queue', InputArgument::REQUIRED)
         ;
     }
 
