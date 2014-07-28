@@ -8,7 +8,7 @@ use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
 use VisualCraft\BeanstalkScheduler\Scheduler;
 
-class WorkerCommand extends ContainerAwareCommand
+class RunSchedulerCommand extends ContainerAwareCommand
 {
     /**
      * {@inheritdoc}
@@ -16,7 +16,7 @@ class WorkerCommand extends ContainerAwareCommand
     protected function configure()
     {
         $this
-            ->setName('vc:beanstalk:worker')
+            ->setName('vc:beanstalk:run-scheduler')
             ->addArgument('queue', InputArgument::REQUIRED)
         ;
     }
@@ -29,10 +29,8 @@ class WorkerCommand extends ContainerAwareCommand
         $queue = $input->getArgument('queue');
         $serviceId = "visual_craft_beanstalk_scheduler.scheduler.{$queue}";
 
-        if (empty($queue) || !$this->getContainer()->has($serviceId)) {
-            $output->writeln("<error>Queue '{$queue}' is not configured</error>");
-
-            return 1;
+        if (!$this->getContainer()->has($serviceId)) {
+            throw new \InvalidArgumentException(sprintf("Scheduler with id '%s' does not exist.", $queue));
         }
 
         /** @var Scheduler $scheduler */
