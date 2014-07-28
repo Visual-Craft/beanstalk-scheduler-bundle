@@ -6,6 +6,7 @@ use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\Config\FileLocator;
 use Symfony\Component\DependencyInjection\Definition;
 use Symfony\Component\DependencyInjection\DefinitionDecorator;
+use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
 
@@ -31,6 +32,10 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
         $this->registerQueues($container, $config['queues']);
     }
 
+    /**
+     * @param ContainerBuilder $container
+     * @param array $connectionsConfig
+     */
     private function registerConnections(ContainerBuilder $container, $connectionsConfig)
     {
         foreach ($connectionsConfig as $connectionId => $connectionConfig) {
@@ -48,41 +53,29 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param $queuesConfig
-     * @throws \Exception
+     * @param array $queuesConfig
      */
     private function registerQueues(ContainerBuilder $container, $queuesConfig)
     {
         $workersMap = [];
 
         foreach ($queuesConfig as $queueId => $queueConfig) {
-            $connectionServiceId = "visual_craft_beanstalk_scheduler.connection.{$queueConfig['connection']}";
-
-            if (!$container->hasDefinition($connectionServiceId)) {
-                throw new \Exception("Not found definition for connection '{$queueConfig['connection']}'");
-            }
+            $connectionReference = new Reference("visual_craft_beanstalk_scheduler.connection.{$queueConfig['connection']}");
 
             $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
             $managerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Manager')
-                ->setArguments([$container->getDefinition($connectionServiceId), $queueId])
+                ->setArguments([$connectionReference, $queueId])
             ;
-
-            $container->setDefinition(
-                "visual_craft_beanstalk_scheduler.manager.{$queueId}",
-                $managerDefinition
-            );
+            $container->setDefinition("visual_craft_beanstalk_scheduler.manager.{$queueId}", $managerDefinition);
 
             $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
             $schedulerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
-                ->setArguments([$container->getDefinition($connectionServiceId), $queueId, $queueConfig['reschedule']])
+                ->setArguments([$connectionReference, $queueId])
+                ->addMethodCall('setReschedule', [$queueConfig['reschedule']])
             ;
-
-            $container->setDefinition(
-                "visual_craft_beanstalk_scheduler.scheduler.{$queueId}",
-                $schedulerDefinition
-            );
+            $container->setDefinition("visual_craft_beanstalk_scheduler.scheduler.{$queueId}", $schedulerDefinition);
 
             $workersMap[$queueId] = $queueConfig['worker'];
         }
