@@ -41,7 +41,7 @@ class Configuration implements ConfigurationInterface
                             ->scalarNode('connection')->defaultValue('default')->end()
                             ->scalarNode('worker')->isRequired()->end()
                             ->arrayNode('reschedule')
-                                ->prototype('integer')
+                                ->prototype('integer')->end()
                             ->end()
                         ->end()
                     ->end()
