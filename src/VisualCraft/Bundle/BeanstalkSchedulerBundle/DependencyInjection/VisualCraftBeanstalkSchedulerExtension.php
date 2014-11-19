@@ -29,7 +29,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
         $loader->load('services.yml');
 
         $this->registerConnections($container, $config['connections']);
-        $this->registerQueues($container, $config['queues']);
+        $this->registerQueues($container, $config);
     }
 
     /**
@@ -53,26 +53,26 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
 
     /**
      * @param ContainerBuilder $container
-     * @param array $queuesConfig
+     * @param array $config
      */
-    private function registerQueues(ContainerBuilder $container, $queuesConfig)
+    private function registerQueues(ContainerBuilder $container, $config)
     {
         $workersMap = [];
 
-        foreach ($queuesConfig as $queueId => $queueConfig) {
+        foreach ($config['queues'] as $queueId => $queueConfig) {
             $connectionReference = new Reference("visual_craft_beanstalk_scheduler.connection.{$queueConfig['connection']}");
 
             $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
             $managerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Manager')
-                ->setArguments([$connectionReference, $queueId])
+                ->setArguments([$connectionReference, $config['queue_prefix'] . $queueId])
             ;
             $container->setDefinition("visual_craft_beanstalk_scheduler.manager.{$queueId}", $managerDefinition);
 
             $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
             $schedulerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
-                ->setArguments([$connectionReference, $queueId])
+                ->setArguments([$connectionReference, $config['queue_prefix'] . $queueId])
                 ->addMethodCall('setReschedule', [$queueConfig['reschedule']])
             ;
             $container->setDefinition("visual_craft_beanstalk_scheduler.scheduler.{$queueId}", $schedulerDefinition);

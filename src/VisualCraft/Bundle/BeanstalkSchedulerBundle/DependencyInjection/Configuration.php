@@ -46,6 +46,7 @@ class Configuration implements ConfigurationInterface
                         ->end()
                     ->end()
                 ->end()
+                ->scalarNode('queue_prefix')->defaultValue('')->end()
             ->end()
         ;
 
