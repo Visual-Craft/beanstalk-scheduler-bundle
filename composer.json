@@ -15,8 +15,8 @@
     },
     "repositories": [
         {
-            "type": "vcs",
-            "url": "git@gitlab.visual-craft.com:common/beanstalk-scheduler.git"
+            "type": "composer",
+            "url": "https://packages.visual-craft.com"
         }
     ]
 }
