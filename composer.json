@@ -8,9 +8,9 @@
     },
     "require": {
         "php": ">=5.5.0",
-        "symfony/framework-bundle": "~2.4.0@stable",
+        "symfony/framework-bundle": "~2.4@stable",
         "symfony/monolog-bundle": "~2.4@stable",
-        "symfony/console": "~2.4.0@stable",
+        "symfony/console": "~2.4@stable",
         "visual-craft/beanstalk-scheduler": "dev-master"
     },
     "repositories": [
