@@ -39,9 +39,13 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
     private function registerConnections(ContainerBuilder $container, $connectionsConfig)
     {
         foreach ($connectionsConfig as $connectionId => $connectionConfig) {
+            $connectTimeout = $connectionConfig['connectTimeout'] === null
+                ? $connectionConfig['connectTimeout']
+                : max((int) $connectionConfig['connectTimeout'], 0)
+            ;
             $connectionDefinition = new Definition(
                 'Pheanstalk\Pheanstalk',
-                [$connectionConfig['host'], $connectionConfig['port'], $connectionConfig['connectTimeout']]
+                [$connectionConfig['host'], $connectionConfig['port'], $connectTimeout]
             );
             $connectionDefinition->setPublic(false);
             $container->setDefinition(

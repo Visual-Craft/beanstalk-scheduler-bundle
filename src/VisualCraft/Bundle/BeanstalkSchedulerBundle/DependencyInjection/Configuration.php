@@ -30,7 +30,7 @@ class Configuration implements ConfigurationInterface
                         ->children()
                             ->scalarNode('host')->defaultValue('127.0.0.1')->end()
                             ->integerNode('port')->defaultValue('11300')->end()
-                            ->integerNode('connectTimeout')->defaultValue('0')->end()
+                            ->scalarNode('connectTimeout')->defaultNull()->end()
                         ->end()
                     ->end()
                 ->end()
