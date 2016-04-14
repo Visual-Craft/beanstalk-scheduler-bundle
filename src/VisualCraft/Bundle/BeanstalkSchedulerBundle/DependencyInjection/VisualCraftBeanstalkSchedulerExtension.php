@@ -84,6 +84,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
             $workersMap[$queueId] = $queueConfig['worker'];
         }
 
+        $container->setParameter('visual_craft_beanstalk_scheduler.queues', array_keys($workersMap));
         $container->setParameter('visual_craft_beanstalk_scheduler.workers_map', $workersMap);
     }
 }
