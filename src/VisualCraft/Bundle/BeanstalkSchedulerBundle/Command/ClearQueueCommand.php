@@ -19,8 +19,9 @@ class ClearQueueCommand extends ContainerAwareCommand
     {
         $this
             ->setName('vc:beanstalk:clear-queue')
-            ->addArgument('queues', InputArgument::IS_ARRAY|InputArgument::REQUIRED)
+            ->addArgument('queues', InputArgument::IS_ARRAY)
             ->addOption('ignore-errors', 'i')
+            ->addOption('all', 'a')
         ;
     }
 
@@ -32,9 +33,9 @@ class ClearQueueCommand extends ContainerAwareCommand
         $getManagerServiceId = function ($queue) {
             return "visual_craft_beanstalk_scheduler.manager.{$queue}";
         };
+        $queues = array_unique($input->getArgument('queues'));
 
-        if ($input->hasArgument('queues')) {
-            $queues = array_unique($input->getArgument('queues'));
+        if ($queues) {
             $missingQueues = [];
 
             foreach ($queues as $queue) {
@@ -46,6 +47,8 @@ class ClearQueueCommand extends ContainerAwareCommand
             if ($missingQueues) {
                 throw new \InvalidArgumentException(sprintf("Worker queues ['%s'] are not registered", implode("', '", $missingQueues)));
             }
+        } elseif (!$input->getOption('all')) {
+            throw new \InvalidArgumentException("You should provide queue name or use '--all' option to clear all queues.");
         } else {
             $queues = $this->getContainer()->getParameter('visual_craft_beanstalk_scheduler.queues');
         }
