@@ -20,7 +20,6 @@ class ClearQueueCommand extends ContainerAwareCommand
         $this
             ->setName('vc:beanstalk:clear-queue')
             ->addArgument('queues', InputArgument::IS_ARRAY)
-            ->addOption('ignore-errors', 'i')
             ->addOption('all', 'a')
         ;
     }
@@ -56,7 +55,7 @@ class ClearQueueCommand extends ContainerAwareCommand
         foreach ($queues as $queue) {
             /** @var Manager $manager */
             $manager = $this->getContainer()->get($getManagerServiceId($queue));
-            $manager->clearQueue($input->getOption('ignore-errors'));
+            $manager->clearQueue();
         }
 
         return 0;
