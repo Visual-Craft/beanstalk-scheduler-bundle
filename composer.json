@@ -1,6 +1,5 @@
 {
     "name": "visual-craft/beanstalk-scheduler-bundle",
-    "version": "dev-master",
     "description": "Background jobs scheduling using Beanstalk (Symfony bundle)",
     "homepage": "https://gitlab.visual-craft.com/common/beanstalk-scheduler-bundle",
     "autoload": {
@@ -8,9 +7,9 @@
     },
     "require": {
         "php": ">=5.5.0",
-        "symfony/framework-bundle": "~2.4@stable",
-        "symfony/monolog-bundle": "~2.4@stable",
-        "symfony/console": "~2.4@stable",
+        "symfony/framework-bundle": "~2.3|~3.0",
+        "symfony/monolog-bundle": "~2.3|~3.0",
+        "symfony/console": "~2.3|~3.0",
         "visual-craft/beanstalk-scheduler": "dev-master"
     },
     "repositories": [
