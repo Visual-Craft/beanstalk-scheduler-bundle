@@ -9,6 +9,7 @@ use Symfony\Component\DependencyInjection\DefinitionDecorator;
 use Symfony\Component\DependencyInjection\Reference;
 use Symfony\Component\HttpKernel\DependencyInjection\Extension;
 use Symfony\Component\DependencyInjection\Loader;
+use Symfony\Component\DependencyInjection\ChildDefinition;
 
 /**
  * This is the class that loads and manages your bundle configuration
@@ -43,6 +44,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
                 ? $connectionConfig['connectTimeout']
                 : max((int) $connectionConfig['connectTimeout'], 0)
             ;
+
             $connectionDefinition = new Definition(
                 'Pheanstalk\Pheanstalk',
                 [$connectionConfig['host'], $connectionConfig['port'], $connectTimeout]
@@ -66,14 +68,24 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
         foreach ($config['queues'] as $queueId => $queueConfig) {
             $connectionReference = new Reference("visual_craft_beanstalk_scheduler.connection.{$queueConfig['connection']}");
 
-            $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
+            if (class_exists(ChildDefinition::class)) {
+                $managerDefinition = new ChildDefinition('visual_craft_beanstalk_scheduler.abstract_manager');
+            } else {
+                $managerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_manager');
+            }
+
             $managerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Manager')
                 ->setArguments([$connectionReference, $config['queue_prefix'] . $queueId])
             ;
             $container->setDefinition("visual_craft_beanstalk_scheduler.manager.{$queueId}", $managerDefinition);
 
-            $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
+            if (class_exists(ChildDefinition::class)) {
+                $schedulerDefinition = new ChildDefinition('visual_craft_beanstalk_scheduler.abstract_scheduler');
+            } else {
+                $schedulerDefinition = new DefinitionDecorator('visual_craft_beanstalk_scheduler.abstract_scheduler');
+            }
+
             $schedulerDefinition
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
                 ->setArguments([$connectionReference, $config['queue_prefix'] . $queueId])
