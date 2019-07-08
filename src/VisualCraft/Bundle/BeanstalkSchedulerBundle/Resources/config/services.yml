@@ -16,13 +16,13 @@ services:
     visual_craft_beanstalk_scheduler.command.clear_queue:
         class: VisualCraft\Bundle\BeanstalkSchedulerBundle\Command\ClearQueueCommand
         calls:
-            ['setContainer', ['@container']]
+            - ['setContainer', ['@container']]
         tags:
             - { name: console.command }
 
     visual_craft_beanstalk_scheduler.command.run_scheduler:
         class: VisualCraft\Bundle\BeanstalkSchedulerBundle\Command\RunSchedulerCommand
         calls:
-            ['setContainer', ['@container']]
+            - ['setContainer', ['@container']]
         tags:
             - { name: console.command }
