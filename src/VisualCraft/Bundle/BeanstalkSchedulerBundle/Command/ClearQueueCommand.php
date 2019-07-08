@@ -2,16 +2,18 @@
 
 namespace VisualCraft\Bundle\BeanstalkSchedulerBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
-use Symfony\Component\Console\Input\InputOption;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use VisualCraft\BeanstalkScheduler\Manager;
-use VisualCraft\BeanstalkScheduler\Scheduler;
 
-class ClearQueueCommand extends ContainerAwareCommand
+class ClearQueueCommand extends Command implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -38,7 +40,7 @@ class ClearQueueCommand extends ContainerAwareCommand
             $missingQueues = [];
 
             foreach ($queues as $queue) {
-                if (!$this->getContainer()->has($getManagerServiceId($queue))) {
+                if (!$this->container->has($getManagerServiceId($queue))) {
                     $missingQueues[] = $queue;
                 }
             }
@@ -49,12 +51,12 @@ class ClearQueueCommand extends ContainerAwareCommand
         } elseif (!$input->getOption('all')) {
             throw new \InvalidArgumentException("You should provide queue name or use '--all' option to clear all queues.");
         } else {
-            $queues = $this->getContainer()->getParameter('visual_craft_beanstalk_scheduler.queues');
+            $queues = $this->container->getParameter('visual_craft_beanstalk_scheduler.queues');
         }
 
         foreach ($queues as $queue) {
             /** @var Manager $manager */
-            $manager = $this->getContainer()->get($getManagerServiceId($queue));
+            $manager = $this->container->get($getManagerServiceId($queue));
             $manager->clearQueue();
         }
 
