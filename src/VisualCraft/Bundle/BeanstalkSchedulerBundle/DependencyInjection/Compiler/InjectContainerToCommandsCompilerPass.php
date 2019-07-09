@@ -14,7 +14,7 @@ class InjectContainerToCommandsCompilerPass implements CompilerPassInterface
      */
     public function process(ContainerBuilder $container)
     {
-        $containerReference = $container->hasDefinition(ContainerInterface::class)
+        $containerReference = $container->findDefinition(ContainerInterface::class)
             ? new Reference(ContainerInterface::class)
             : new Reference('container')
         ;
