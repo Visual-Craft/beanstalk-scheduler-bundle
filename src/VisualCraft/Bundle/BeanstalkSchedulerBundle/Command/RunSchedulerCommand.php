@@ -2,14 +2,18 @@
 
 namespace VisualCraft\Bundle\BeanstalkSchedulerBundle\Command;
 
-use Symfony\Bundle\FrameworkBundle\Command\ContainerAwareCommand;
+use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Input\InputArgument;
 use Symfony\Component\Console\Input\InputInterface;
 use Symfony\Component\Console\Output\OutputInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareInterface;
+use Symfony\Component\DependencyInjection\ContainerAwareTrait;
 use VisualCraft\BeanstalkScheduler\Scheduler;
 
-class RunSchedulerCommand extends ContainerAwareCommand
+class RunSchedulerCommand extends Command implements ContainerAwareInterface
 {
+    use ContainerAwareTrait;
+
     /**
      * {@inheritdoc}
      */
@@ -29,12 +33,12 @@ class RunSchedulerCommand extends ContainerAwareCommand
         $queue = $input->getArgument('queue');
         $serviceId = "visual_craft_beanstalk_scheduler.scheduler.{$queue}";
 
-        if (!$this->getContainer()->has($serviceId)) {
+        if (!$this->container->has($serviceId)) {
             throw new \InvalidArgumentException(sprintf("Scheduler with id '%s' does not exist.", $queue));
         }
 
         /** @var Scheduler $scheduler */
-        $scheduler = $this->getContainer()->get($serviceId);
+        $scheduler = $this->container->get($serviceId);
         $scheduler->process();
 
         return 0;
