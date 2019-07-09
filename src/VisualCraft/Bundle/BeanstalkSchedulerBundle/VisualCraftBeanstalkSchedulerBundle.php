@@ -4,6 +4,7 @@ namespace VisualCraft\Bundle\BeanstalkSchedulerBundle;
 
 use Symfony\Component\DependencyInjection\ContainerBuilder;
 use Symfony\Component\HttpKernel\Bundle\Bundle;
+use VisualCraft\Bundle\BeanstalkSchedulerBundle\DependencyInjection\Compiler\InjectContainerToCommandsCompilerPass;
 use VisualCraft\Bundle\BeanstalkSchedulerBundle\DependencyInjection\Compiler\RegisterWorkersCompilerPass;
 
 class VisualCraftBeanstalkSchedulerBundle extends Bundle
@@ -16,5 +17,6 @@ class VisualCraftBeanstalkSchedulerBundle extends Bundle
         parent::build($container);
 
         $container->addCompilerPass(new RegisterWorkersCompilerPass());
+        $container->addCompilerPass(new InjectContainerToCommandsCompilerPass());
     }
 }
