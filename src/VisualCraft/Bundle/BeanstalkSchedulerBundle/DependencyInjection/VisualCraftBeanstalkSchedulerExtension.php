@@ -90,6 +90,7 @@ class VisualCraftBeanstalkSchedulerExtension extends Extension
                 ->setClass('VisualCraft\BeanstalkScheduler\Scheduler')
                 ->setArguments([$connectionReference, $config['queue_prefix'] . $queueId])
                 ->addMethodCall('setReschedule', [$queueConfig['reschedule']])
+                ->setPublic(true)
             ;
             $container->setDefinition("visual_craft_beanstalk_scheduler.scheduler.{$queueId}", $schedulerDefinition);
 
